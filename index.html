@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Petualangan Bentang Alam Nusantara - IPAS Kelas 4</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <!-- Google Font: Fredoka -->
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    body {
+      font-family: 'Fredoka', cursive, sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    
+    .glass-card {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      border: 3px solid rgba(255, 255, 255, 0.7);
+    }
+    
+    .btn-bounce {
+      transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .btn-bounce:hover {
+      transform: translateY(-4px) scale(1.02);
+    }
+    .btn-bounce:active {
+      transform: translateY(2px) scale(0.98);
+    }
+    
+    .pulse-glow {
+      animation: pulseGlow 2s infinite alternate;
+    }
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); }
+      100% { box-shadow: 0 0 25px rgba(59, 130, 246, 0.8); }
+    }
+
+    /* Custom Scrollbar for review modal */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 8px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #94a3b8;
+      border-radius: 8px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #64748b;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-sky-300 via-teal-200 to-amber-100 min-h-screen text-slate-800 overflow-x-hidden flex flex-col justify-between">
+
+  <!-- TOP HEADER NAV BAR -->
+  <header class="w-full bg-white/80 backdrop-blur-md border-b-4 border-amber-300 px-4 py-2 sticky top-0 z-40 shadow-sm">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <div class="flex items-center gap-3 cursor-pointer" onclick="showScreen('start-screen')">
+        <div class="w-10 h-10 rounded-2xl bg-amber-400 flex items-center justify-center text-white text-xl font-bold shadow-md">
+          <i class="fa-solid font-bold fa-mountain-sun"></i>
+        </div>
+        <div>
+          <h1 class="font-bold text-lg md:text-xl text-teal-800 leading-none">Petualangan Bentang Alam</h1>
+          <span class="text-xs font-semibold text-amber-600">IPAS Kelas 4 SD</span>
+        </div>
+      </div>
+      
+      <!-- Audio & Info Toggle -->
+      <div class="flex items-center gap-2">
+        <button id="sound-btn" onclick="toggleSound()" class="w-10 h-10 rounded-full bg-amber-100 text-amber-700 hover:bg-amber-200 flex items-center justify-center transition shadow-sm">
+          <i id="sound-icon" class="fa-solid fa-volume-high"></i>
+        </button>
+        <button onclick="toggleHelpModal()" class="w-10 h-10 rounded-full bg-sky-100 text-sky-700 hover:bg-sky-200 flex items-center justify-center transition shadow-sm">
+          <i class="fa-solid fa-circle-question"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="w-full max-w-7xl mx-auto p-3 md:p-6 flex-grow flex items-center justify-center">
+
+    <!-- 1. START SCREEN -->
+    <section id="start-screen" class="w-full max-w-3xl glass-card rounded-3xl p-6 md:p-10 text-center shadow-2xl border-4 border-white relative overflow-hidden">
+      <div class="absolute -top-12 -right-12 w-32 h-32 bg-yellow-300 rounded-full blur-2xl opacity-60"></div>
+      <div class="absolute -bottom-12 -left-12 w-32 h-32 bg-teal-300 rounded-full blur-2xl opacity-60"></div>
+
+      <div class="inline-block px-4 py-1 bg-amber-100 text-amber-800 font-bold rounded-full text-sm mb-4 border border-amber-300">
+        <i class="fa-solid fa-star text-amber-500 mr-1"></i> Modul Pembelajaran IPAS Kelas 4
+      </div>
+
+      <h1 class="text-3xl md:text-5xl font-extrabold text-teal-800 mb-3 tracking-wide drop-shadow-sm">
+        Petualangan Bentang Alam <span class="text-amber-500">Nusantara</span>
+      </h1>
+      <p class="text-slate-600 text-base md:text-lg mb-8 max-w-xl mx-auto font-medium">
+        Jelajahi keindahan kenampakan alam Indonesia dalam bentuk diorama 3D interaktif dan pelajari kegiatan masyarakat di sekitarnya!
+      </p>
+
+      <!-- Explorer Character Mascot Illustration -->
+      <div class="relative w-40 h-40 mx-auto mb-8 bg-gradient-to-tr from-sky-400 to-teal-300 rounded-full p-2 shadow-inner flex items-center justify-center">
+        <div class="text-7xl animate-bounce">
+          🤠
+        </div>
+        <div class="absolute -bottom-2 bg-white px-3 py-1 rounded-full text-xs font-bold shadow text-teal-700 border border-teal-200">
+          Si Kancil Petualang
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <button onclick="startGame(1)" class="w-full sm:w-auto px-8 py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-lg rounded-2xl shadow-lg border-b-4 border-emerald-700 btn-bounce flex items-center justify-center gap-2">
+          <i class="fa-solid fa-play text-xl"></i> Mulai Petualangan
+        </button>
+        <button onclick="showScreen('level-select-screen')" class="w-full sm:w-auto px-8 py-4 bg-sky-500 hover:bg-sky-600 text-white font-bold text-lg rounded-2xl shadow-lg border-b-4 border-sky-700 btn-bounce flex items-center justify-center gap-2">
+          <i class="fa-solid fa-map"></i> Pilih Level
+        </button>
+      </div>
+    </section>
+
+    <!-- 2. LEVEL SELECT SCREEN -->
+    <section id="level-select-screen" class="hidden w-full max-w-4xl glass-card rounded-3xl p-6 md:p-8 shadow-2xl border-4 border-white">
+      <h2 class="text-2xl md:text-3xl font-bold text-teal-800 text-center mb-2">Pilih Level Petualangan</h2>
+      <p class="text-slate-600 text-center text-sm md:text-base mb-8">Pilih topik materi yang ingin kamu pelajari hari ini!</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Level 1 Card -->
+        <div onclick="startGame(1)" class="bg-gradient-to-br from-amber-50 to-orange-100 rounded-2xl p-6 border-4 border-amber-300 shadow-md hover:shadow-xl transition cursor-pointer btn-bounce flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-center mb-3">
+              <span class="px-3 py-1 bg-amber-400 text-white font-bold text-xs rounded-full shadow">LEVEL 1</span>
+              <span class="text-amber-700 text-xs font-bold"><i class="fa-solid fa-cubes"></i> 10 Diorama 3D</span>
+            </div>
+            <h3 class="text-xl font-bold text-amber-900 mb-2">Identifikasi Bentang Alam</h3>
+            <p class="text-slate-600 text-sm mb-4">Kenali 10 bentuk kenampakan alam (gunung, pantai, sungai, rawa, dll) melalui model visual 3D interaktif!</p>
+          </div>
+          <button class="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl shadow border-b-4 border-amber-700">
+            Main Level 1
+          </button>
+        </div>
+
+        <!-- Level 2 Card -->
+        <div onclick="startGame(2)" class="bg-gradient-to-br from-teal-50 to-emerald-100 rounded-2xl p-6 border-4 border-teal-300 shadow-md hover:shadow-xl transition cursor-pointer btn-bounce flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-center mb-3">
+              <span class="px-3 py-1 bg-teal-500 text-white font-bold text-xs rounded-full shadow">LEVEL 2</span>
+              <span class="text-teal-700 text-xs font-bold"><i class="fa-solid fa-users"></i> 10 Aktivitas</span>
+            </div>
+            <h3 class="text-xl font-bold text-teal-900 mb-2">Aktivitas Masyarakat</h3>
+            <p class="text-slate-600 text-sm mb-4">Pelajari berbagai kegiatan ekonomi, pekerjaan, dan pemanfaatan bentang alam oleh penduduk Indonesia!</p>
+          </div>
+          <button class="w-full py-3 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl shadow border-b-4 border-teal-800">
+            Main Level 2
+          </button>
+        </div>
+      </div>
+
+      <div class="mt-8 text-center">
+        <button onclick="showScreen('start-screen')" class="px-6 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl transition">
+          <i class="fa-solid fa-arrow-left mr-2"></i> Kembali ke Menu Utama
+        </button>
+      </div>
+    </section>
+
+    <!-- 3. GAMEPLAY SCREEN -->
+    <section id="game-screen" class="hidden w-full max-w-6xl flex flex-col gap-4">
+      
+      <!-- Top Status Bar -->
+      <div class="glass-card rounded-2xl p-4 flex flex-wrap justify-between items-center gap-3 shadow-md border-2 border-white">
+        <!-- Level & Question Indicator -->
+        <div class="flex items-center gap-3">
+          <span id="level-badge" class="px-3 py-1 bg-teal-500 text-white font-bold text-xs md:text-sm rounded-full">Level 1</span>
+          <span id="question-count" class="font-bold text-slate-700 text-sm md:text-base">Soal 1 / 10</span>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="flex-grow max-w-xs bg-slate-200 h-4 rounded-full overflow-hidden p-0.5 border border-slate-300">
+          <div id="progress-bar" class="bg-gradient-to-r from-amber-400 to-emerald-400 h-full rounded-full transition-all duration-500" style="width: 10%;"></div>
+        </div>
+
+        <!-- Lives & Score -->
+        <div class="flex items-center gap-4">
+          <!-- Hearts -->
+          <div id="lives-container" class="flex gap-1 text-red-500 text-lg md:text-xl">
+            <i class="fa-solid fa-heart animate-pulse"></i>
+            <i class="fa-solid fa-heart animate-pulse"></i>
+            <i class="fa-solid fa-heart animate-pulse"></i>
+          </div>
+          <!-- Score -->
+          <div class="bg-amber-100 border border-amber-300 px-3 py-1 rounded-xl text-amber-800 font-bold text-sm md:text-base">
+            Skor: <span id="current-score" class="text-amber-600">0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Play Area (2 Columns) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
+        
+        <!-- 3D Diorama Canvas Box (Left / Top) -->
+        <div class="lg:col-span-6 bg-slate-900 rounded-3xl overflow-hidden relative shadow-xl border-4 border-white flex flex-col min-h-[320px] lg:min-h-[440px]">
+          <!-- 3D Canvas -->
+          <div id="three-container" class="w-full h-full absolute inset-0 cursor-grab active:cursor-grabbing"></div>
+          
+          <!-- Overlay Controls Hint -->
+          <div class="absolute top-3 left-3 bg-black/50 backdrop-blur-md px-3 py-1 rounded-full text-white text-xs font-medium flex items-center gap-2 pointer-events-none">
+            <i class="fa-solid fa-arrows-rotate animate-spin" style="animation-duration: 6s;"></i> Drag / Putar Diorama 3D
+          </div>
+
+          <!-- Active Landform Title Tag -->
+          <div class="absolute bottom-3 right-3 bg-amber-400/90 backdrop-blur-md px-4 py-1.5 rounded-2xl text-slate-900 font-extrabold text-xs md:text-sm shadow">
+            <i class="fa-solid fa-globe mr-1"></i> Model Visual 3D
+          </div>
+        </div>
+
+        <!-- Question & Answers Box (Right / Bottom) -->
+        <div class="lg:col-span-6 glass-card rounded-3xl p-5 md:p-6 shadow-xl border-4 border-white flex flex-col justify-between">
+          <div>
+            <!-- Visual Badge -->
+            <div class="flex items-center justify-between mb-3">
+              <span id="question-category" class="px-3 py-1 bg-sky-100 text-sky-800 font-bold text-xs rounded-lg border border-sky-300">
+                Identifikasi Bentang Alam
+              </span>
+              <button onclick="showHint()" class="text-xs font-bold text-amber-700 bg-amber-100 hover:bg-amber-200 px-3 py-1 rounded-lg transition flex items-center gap-1 border border-amber-300">
+                <i class="fa-solid fa-lightbulb text-amber-500"></i> Petunjuk
+              </button>
+            </div>
+
+            <!-- Question Text -->
+            <h3 id="question-text" class="text-base md:text-lg font-bold text-slate-800 mb-4 leading-snug">
+              Memuat soal...
+            </h3>
+
+            <!-- Options Grid -->
+            <div id="options-container" class="grid grid-cols-1 gap-2.5 mb-4">
+              <!-- Options populated by JS -->
+            </div>
+          </div>
+
+          <!-- Feedback Box & Next Button -->
+          <div id="feedback-box" class="hidden rounded-2xl p-3 text-sm font-bold flex items-center justify-between transition-all">
+            <div class="flex items-center gap-2">
+              <span id="feedback-icon" class="text-2xl"></span>
+              <span id="feedback-msg"></span>
+            </div>
+            <button id="next-btn" onclick="nextQuestion()" class="px-5 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl shadow btn-bounce text-xs md:text-sm">
+              Lanjut <i class="fa-solid fa-arrow-right ml-1"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. RESULTS SCREEN (Rapor Petualang) -->
+    <section id="result-screen" class="hidden w-full max-w-3xl glass-card rounded-3xl p-6 md:p-8 text-center shadow-2xl border-4 border-white">
+      <div class="inline-block px-4 py-1 bg-emerald-100 text-emerald-800 font-bold rounded-full text-sm mb-3 border border-emerald-300">
+        🎓 RAPOR PETUALANG IPAS
+      </div>
+
+      <h2 class="text-3xl font-extrabold text-teal-800 mb-1">Petualangan Selesai!</h2>
+      <p id="result-subtitle" class="text-slate-600 text-sm mb-6">Hebat! Kamu telah menyelesaikan modul ini.</p>
+
+      <!-- Badge Icon -->
+      <div class="w-28 h-28 mx-auto mb-4 bg-gradient-to-tr from-amber-300 to-yellow-400 rounded-full flex items-center justify-center shadow-lg border-4 border-white pulse-glow">
+        <i class="fa-solid fa-award text-6xl text-amber-800"></i>
+      </div>
+
+      <!-- Star Rating -->
+      <div id="star-rating" class="flex justify-center gap-2 text-3xl text-amber-400 mb-4">
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+      </div>
+
+      <!-- Score Card Summary -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 max-w-lg mx-auto mb-6">
+        <div class="bg-white/80 p-3 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="text-xs font-bold text-slate-500">Skor Akhir</div>
+          <div id="final-score" class="text-2xl font-extrabold text-teal-700">0</div>
+        </div>
+        <div class="bg-white/80 p-3 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="text-xs font-bold text-slate-500">Jawaban Benar</div>
+          <div id="final-correct" class="text-2xl font-extrabold text-emerald-600">0 / 10</div>
+        </div>
+        <div class="bg-white/80 p-3 rounded-2xl border border-slate-200 shadow-sm col-span-2 sm:col-span-1">
+          <div class="text-xs font-bold text-slate-500">Gelar Kelulusan</div>
+          <div id="final-badge" class="text-sm font-extrabold text-amber-600 truncate">Pakar Alam</div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-3 justify-center items-center">
+        <button onclick="showReviewModal()" class="w-full sm:w-auto px-6 py-3 bg-sky-500 hover:bg-sky-600 text-white font-bold rounded-xl shadow btn-bounce flex items-center justify-center gap-2">
+          <i class="fa-solid fa-book-open"></i> Pembahasan Soal
+        </button>
+        <button onclick="showScreen('level-select-screen')" class="w-full sm:w-auto px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl shadow btn-bounce flex items-center justify-center gap-2">
+          <i class="fa-solid fa-rotate-right"></i> Main Lagi
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL 1: PETUNJUK & CARA MAIN -->
+  <div id="help-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border-4 border-amber-300 relative">
+      <h3 class="text-2xl font-bold text-teal-800 mb-3 flex items-center gap-2">
+        <i class="fa-solid fa-compass text-amber-500"></i> Cara Bermain
+      </h3>
+      <ul class="text-slate-600 text-sm space-y-2.5 mb-6 font-medium">
+        <li class="flex items-start gap-2">
+          <span class="bg-amber-100 text-amber-800 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">1</span>
+          <span>Amatilah diorama 3D di layar sebelah kiri (bisa kamu geser dan putar 360 derajat).</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="bg-amber-100 text-amber-800 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">2</span>
+          <span>Baca soal di sebelah kanan dengan teliti. Pilih 1 dari 4 pilihan jawaban yang menurutmu benar.</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="bg-amber-100 text-amber-800 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">3</span>
+          <span>Level 1 menguji pengenalan bentuk bentang alam, sedangkan Level 2 menguji aktivitas masyarakatnya.</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="bg-amber-100 text-amber-800 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">4</span>
+          <span>Setiap soal benar bernilai 10 poin. Kamu punya 3 nyawa (hati) dalam setiap ronde.</span>
+        </li>
+      </ul>
+      <button onclick="toggleHelpModal()" class="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl shadow">
+        Saya Mengerti!
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL 2: PEMBAHASAN SOAL (REVIEW) -->
+  <div id="review-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl border-4 border-sky-300 max-h-[85vh] flex flex-col">
+      <div class="flex justify-between items-center mb-4 border-b pb-2">
+        <h3 class="text-xl font-bold text-teal-800">
+          <i class="fa-solid fa-list-check text-sky-500 mr-2"></i> Kunci Jawaban & Pembahasan
+        </h3>
+        <button onclick="closeReviewModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Scrollable Review List -->
+      <div id="review-list" class="overflow-y-auto space-y-4 pr-2 flex-grow">
+        <!-- Dynamic Review Items -->
+      </div>
+
+      <div class="mt-4 pt-3 border-t">
+        <button onclick="closeReviewModal()" class="w-full py-2.5 bg-sky-500 hover:bg-sky-600 text-white font-bold rounded-xl shadow">
+          Tutup Pembahasan
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="w-full text-center py-2 text-xs font-semibold text-slate-600">
+    Pembelajaran IPAS SD Kelas 4 &bull; Bentang Alam Nusantara &bull; Interactive 3D Web Engine
+  </footer>
+
+  <!-- SCRIPT LOGIC: THREE.JS DIORAMAS, QUESTIONS, AUDIO SYNTHESIZER -->
+  <script>
+    /* =========================================================================
+       1. QUESTION BANK DATA (LEVEL 1 & LEVEL 2)
+       ========================================================================= */
+    const questionBank = {
+      level1: [
+        {
+          id: 'gunung',
+          landformKey: 'gunung',
+          question: "Bentuk permukaan bumi yang menjulang sangat tinggi dan biasanya memiliki puncak serta kawah/asap dinamakan...",
+          options: ["A. Gunung", "B. Dataran Rendah", "C. Rawa", "D. Lembah"],
+          answer: 0,
+          hint: "Ciri khasnya adalah puncaknya yang tinggi menembus awan dan kadang mengeluarkan kawah asap.",
+          explanation: "Gunung adalah kenampakan alam berupa permukaan tanah yang menjulang jauh lebih tinggi dibanding daerah sekitarnya."
+        },
+        {
+          id: 'dataran_tinggi',
+          landformKey: 'dataran_tinggi',
+          question: "Wilayah daratan yang luas dan berada di ketinggian di atas 600 meter dari permukaan laut dengan udara sejuk dinamakan...",
+          options: ["A. Pantai", "B. Dataran Tinggi", "C. Sungai", "D. Rawa"],
+          answer: 1,
+          hint: "Wilayah ini berada di daerah pegunungan/perbukitan yang sejuk dan cocok untuk kebun teh.",
+          explanation: "Dataran tinggi adalah daratan luas yang terletak di kawasan bernuansa perbukitan/pegunungan dengan udara dingin/sejuk."
+        },
+        {
+          id: 'dataran_rendah',
+          landformKey: 'dataran_rendah',
+          question: "Bentuk daratan yang relatif datar dan rata dengan ketinggian kurang dari 200 meter dpl, sering dipakai untuk pemukiman dinamakan...",
+          options: ["A. Gunung", "B. Pegunungan", "C. Dataran Rendah", "D. Bukit"],
+          answer: 2,
+          hint: "Bentuk tanahnya rata dan tidak bergelombang tinggi, sangat mudah dibangun perkotaan.",
+          explanation: "Dataran rendah adalah wilayah landai dan datar yang berada pada ketinggian rendah (<200 mdpl)."
+        },
+        {
+          id: 'pantai',
+          landformKey: 'pantai',
+          question: "Wilayah daratan yang berbatasan langsung dengan laut dan biasanya dipenuhi pasir serta pohon kelapa adalah...",
+          options: ["A. Danau", "B. Pantai", "C. Lembah", "D. Pegunungan"],
+          answer: 1,
+          hint: "Di tempat ini kamu bisa melihat ombak laut dan berjalan di atas pasir pantai.",
+          explanation: "Pantai adalah daerah perbatasan langsung antara wilayah daratan dan lautan."
+        },
+        {
+          id: 'sungai',
+          landformKey: 'sungai',
+          question: "Aliran air tawar yang mengalir memanjang secara alami dari pegunungan menuju ke laut disebut...",
+          options: ["A. Sungai", "B. Danau", "C. Rawa", "D. Bukit"],
+          answer: 0,
+          hint: "Airnya mengalir dari hulu (gunung) ke hilir (laut).",
+          explanation: "Sungai adalah badan air tawar yang mengalir secara berlanjut dari tempat tinggi menuju laut/danau."
+        },
+        {
+          id: 'danau',
+          landformKey: 'danau',
+          question: "Genangan air tawar yang sangat luas di daratan dan dikelilingi oleh daratan/pegunungan di sekelilingnya adalah...",
+          options: ["A. Sungai", "B. Pantai", "C. Danau", "D. Rawa"],
+          answer: 2,
+          hint: "Airnya tenang dan dikepung oleh daratan di seluruh sisinya.",
+          explanation: "Danau adalah cekungan luas di daratan yang terisi air (seperti Danau Toba)."
+        },
+        {
+          id: 'lembah',
+          landformKey: 'lembah',
+          question: "Wilayah daratan rendah yang berada landai di antara dua gunung atau dua bukit dinamakan...",
+          options: ["A. Lembah", "B. Dataran Tinggi", "C. Pegunungan", "D. Gunung"],
+          answer: 0,
+          hint: "Berada di bawah atau diapit oleh dua bukit/gunung tinggi.",
+          explanation: "Lembah adalah cekungan daratan yang terletak di kaki gunung atau di antara perbukitan."
+        },
+        {
+          id: 'bukit',
+          landformKey: 'bukit',
+          question: "Timbunan tanah menjulang yang menyerupai gunung, namun ukurannya jauh lebih rendah dan tidak terlalu curam dinamakan...",
+          options: ["A. Rawa", "B. Bukit", "C. Samudra", "D. Dataran Rendah"],
+          answer: 1,
+          hint: "Lebih rendah dari gunung dan puncaknya biasanya membulat hijau.",
+          explanation: "Bukit adalah bentang alam bertanah tinggi menyerupai gunung namun dengan skala ketinggian yang lebih rendah."
+        },
+        {
+          id: 'rawa',
+          landformKey: 'rawa',
+          question: "Lahan basah di daratan yang selalu tergenang air dan biasanya banyak ditumbuhi tanaman bakau atau eceng gondok adalah...",
+          options: ["A. Rawa", "B. Gunung", "C. Dataran Tinggi", "D. Bukit"],
+          answer: 0,
+          hint: "Tanahnya berlumpur dan selalu terendam air.",
+          explanation: "Rawa adalah lahan genangan air alami yang bertanah basah/berlumpur."
+        },
+        {
+          id: 'pegunungan',
+          landformKey: 'pegunungan',
+          question: "Rangkaian atau deretan dari beberapa gunung yang berjejer sambung-menyambung menjadi satu dinamakan...",
+          options: ["A. Danau", "B. Lembah", "C. Pegunungan", "D. Pantai"],
+          answer: 2,
+          hint: "Bukan hanya 1 gunung, melainkan barisan banyak gunung.",
+          explanation: "Pegunungan adalah gugusan atau deretan beberapa gunung yang membentang luas."
+        }
+      ],
+      level2: [
+        {
+          id: 'act_1',
+          landformKey: 'dataran_tinggi',
+          question: "Masyarakat di daerah Dataran Tinggi (seperti Dieng atau Puncak) banyak memanfaatkan iklim sejuknya untuk...",
+          options: [
+            "A. Membuat tambak garam laut",
+            "B. Perkebunan teh, kopi, dan sayuran",
+            "C. Pelabuhan kapal besar",
+            "D. Menangkap ikan laut"
+          ],
+          answer: 1,
+          hint: "Tanaman seperti teh dan kentang tumbuh sangat subur di udara sejuk dingin.",
+          explanation: "Dataran tinggi cocok untuk pertanian hortikultura, teh, dan sayuran karena hawanya yang sejuk."
+        },
+        {
+          id: 'act_2',
+          landformKey: 'pantai',
+          question: "Sebagian besar mata pencaharian penduduk yang tinggal di wilayah pesisir Pantai adalah...",
+          options: [
+            "A. Petani teh dan kubis",
+            "B. Nelayan dan pembuat garam",
+            "C. Penambang batu bara",
+            "D. Peternak sapi perah"
+          ],
+          answer: 1,
+          hint: "Mereka berlayar menggunakan perahu untuk mencari hasil laut.",
+          explanation: "Penduduk pantai umumnya bekerja sebagai nelayan, petani garam, serta pemandu wisata bahari."
+        },
+        {
+          id: 'act_3',
+          landformKey: 'dataran_rendah',
+          question: "Mengapa kawasan Dataran Rendah menjadi lokasi favorit untuk pusat pemerintahan, perkotaan, dan kawasan industri?",
+          options: [
+            "A. Karena hawanya sangat dingin",
+            "B. Karena lahannya rata dan mudah dibangun akses jalan",
+            "C. Karena dipenuhi jurang dan tebing tinggi",
+            "D. Karena sering tertutup kabut tebal"
+          ],
+          answer: 1,
+          hint: "Kondisi tanah rata memudahkan pembangunan jalan, pabrik, dan gedung.",
+          explanation: "Dataran rendah bersifat rata sehingga mempermudah sarana transportasi dan pembangunan kota."
+        },
+        {
+          id: 'act_4',
+          landformKey: 'sungai',
+          question: "Selain untuk irigasi pengairan sawah, aliran sungai besar di pulau Kalimantan dimanfaatkan warga sebagai...",
+          options: [
+            "A. Jalur transportasi air & pasar terapung",
+            "B. Olahraga selancar ombak tinggi",
+            "C. Tempat pembuatan garam dapur",
+            "D. Tambak penangkapan ikan paus"
+          ],
+          answer: 0,
+          hint: "Warga bertransaksi jual beli di atas perahu di sungai.",
+          explanation: "Sungai besar dimanfaatkan untuk sarana perhubungan/transportasi perahu dan pasar terapung."
+        },
+        {
+          id: 'act_5',
+          landformKey: 'danau',
+          question: "Salah satu pemanfaatan ekonomi kawasan Danau oleh masyarakat sekitar adalah...",
+          options: [
+            "A. Penambangan pasir pantai",
+            "B. Budidaya ikan air tawar (keramba) & wisata",
+            "C. Perkebunan kelapa sawit",
+            "D. Pelabuhan kapal pesiar samudra"
+          ],
+          answer: 1,
+          hint: "Air tenang di danau sangat baik untuk memelihara ikan air tawar seperti nila/jair.",
+          explanation: "Danau dimanfaatkan untuk keramba jaring apung (budidaya ikan) serta destinasi rekreasi air."
+        },
+        {
+          id: 'act_6',
+          landformKey: 'pegunungan',
+          question: "Kawasan hutan lebat di daerah Pegunungan dimanfaatkan pemerintah dan masyarakat untuk...",
+          options: [
+            "A. Konservasi alam, resapan air & wisata pendakian",
+            "B. Tempat mendirikan pabrik tekstil",
+            "C. Tempat pembuatan garam dapur",
+            "D. Lahan persawahan padi irigasi"
+          ],
+          answer: 0,
+          hint: "Pegunungan berfungsi menjaga sumber air dan oksigen bumi.",
+          explanation: "Pegunungan berperan sebagai hutan lindung, daerah resapan air hujan, dan tujuan wisata alam."
+        },
+        {
+          id: 'act_7',
+          landformKey: 'gunung',
+          question: "Di daerah sekitar Gunung Berapi aktif, masyarakat sekitar mendapatkan manfaat ekonomi berupa...",
+          options: [
+            "A. Pasir vulkanik yang subur & sumber panas bumi",
+            "B. Terumbu karang yang indah",
+            "C. Hutan bakau yang rimbun",
+            "D. Garam alami dari laut"
+          ],
+          answer: 0,
+          hint: "Gunung meletus mengeluarkan material pasir yang kaya mineral tanah.",
+          explanation: "Abu & pasir vulkanik gunung berapi menyuburkan tanah pertanian serta menghasilkan material tambang bangunan."
+        },
+        {
+          id: 'act_8',
+          landformKey: 'rawa',
+          question: "Upaya pelestarian lingkungan sekaligus sumber mata pencaharian warga di daerah Rawa Pesisir adalah...",
+          options: [
+            "A. Menanam teh dan kopi",
+            "B. Melestarikan hutan bakau (mangrove) & udang/kepiting",
+            "C. Menambang belerang",
+            "D. Membangun gedung pencakar langit"
+          ],
+          answer: 1,
+          hint: "Tanaman bakau tumbuh subur di lahan basah pesisir.",
+          explanation: "Hutan mangrove di rawa pesisir melindungi pantai dari erosi dan menjadi sarang udang/kepiting."
+        },
+        {
+          id: 'act_9',
+          landformKey: 'dataran_tinggi',
+          question: "Selain perkebunan, hewan ternak yang sangat cocok dibudidayakan di daerah Dataran Tinggi yang sejuk adalah...",
+          options: [
+            "A. Sapi perah penghasil susu",
+            "B. Unta padang pasir",
+            "C. Ikan hiu laut",
+            "D. Burung kasuari"
+          ],
+          answer: 0,
+          hint: "Hewan ini menghasilkan susu segar yang nikmat diminum dingin/hangat.",
+          explanation: "Sapi perah membutuhkan suhu udara yang dingin dan sejuk agar menghasilkan susu berkualitas tinggi."
+        },
+        {
+          id: 'act_10',
+          landformKey: 'sungai',
+          question: "Kegiatan olahraga wisata air yang sangat seru dan memanfaatkan arus deras di sungai perbukitan adalah...",
+          options: [
+            "A. Selancar ombak (Surfing)",
+            "B. Arung Jeram (Rafting)",
+            "C. Menyelam laut (Diving)",
+            "D. Berenang di kolam renang"
+          ],
+          answer: 1,
+          hint: "Menggunakan perahu karet dan helm menyusuri bebatuan sungai.",
+          explanation: "Arung jeram adalah kegiatan wisata petualangan menyusuri jeram aliran sungai berarus cepat."
+        }
+      ]
+    };
+
+    /* =========================================================================
+       2. WEB AUDIO API SYNTHESIZER (NO EXTERNAL FILES REQUIRED)
+       ========================================================================= */
+    class SoundEngine {
+      constructor() {
+        this.ctx = null;
+        this.enabled = true;
+      }
+      
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          this.ctx = new AudioContext();
+        }
+      }
+
+      playClick() {
+        if (!this.enabled) return;
+        this.init();
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(600, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(200, this.ctx.currentTime + 0.05);
+        gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.05);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.05);
+      }
+
+      playCorrect() {
+        if (!this.enabled) return;
+        this.init();
+        const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+        notes.forEach((freq, idx) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.value = freq;
+          const startTime = this.ctx.currentTime + (idx * 0.08);
+          gain.gain.setValueAtTime(0.25, startTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.25);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(startTime);
+          osc.stop(startTime + 0.25);
+        });
+      }
+
+      playWrong() {
+        if (!this.enabled) return;
+        this.init();
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(180, this.ctx.currentTime);
+        osc.frequency.linearRampToValueAtTime(110, this.ctx.currentTime + 0.3);
+        gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.3);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.3);
+      }
+
+      playWin() {
+        if (!this.enabled) return;
+        this.init();
+        const tune = [440, 554.37, 659.25, 880];
+        tune.forEach((freq, idx) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.value = freq;
+          const startTime = this.ctx.currentTime + (idx * 0.12);
+          gain.gain.setValueAtTime(0.3, startTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, startTime + 0.4);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(startTime);
+          osc.stop(startTime + 0.4);
+        });
+      }
+    }
+
+    const sounds = new SoundEngine();
+
+    function toggleSound() {
+      sounds.enabled = !sounds.enabled;
+      const icon = document.getElementById('sound-icon');
+      if (sounds.enabled) {
+        icon.className = "fa-solid fa-volume-high";
+        sounds.playClick();
+      } else {
+        icon.className = "fa-solid fa-volume-xmark text-slate-400";
+      }
+    }
+
+    /* =========================================================================
+       3. THREE.JS 3D ENGINE & PROCEDURAL DIORAMA BUILDER
+       ========================================================================= */
+    let scene, camera, renderer, dioramaGroup, animReqId;
+    let isDragging = false;
+    let previousMousePosition = { x: 0, y: 0 };
+
+    function initThreeJS() {
+      const container = document.getElementById('three-container');
+      if (!container) return;
+      container.innerHTML = '';
+
+      // Scene
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x87ceeb); // Light sky blue
+      scene.fog = new THREE.FogExp2(0x87ceeb, 0.025);
+
+      // Camera
+      const aspect = container.clientWidth / container.clientHeight;
+      camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 1000);
+      camera.position.set(0, 12, 22);
+      camera.lookAt(0, 2, 0);
+
+      // Renderer
+      renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      container.appendChild(renderer.domElement);
+
+      // Lighting
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.65);
+      scene.add(ambientLight);
+
+      const dirLight = new THREE.DirectionalLight(0xfffaed, 0.8);
+      dirLight.position.set(15, 25, 15);
+      dirLight.castShadow = true;
+      dirLight.shadow.mapSize.width = 1024;
+      dirLight.shadow.mapSize.height = 1024;
+      scene.add(dirLight);
+
+      // Main Group Holding Diorama
+      dioramaGroup = new THREE.Group();
+      scene.add(dioramaGroup);
+
+      // Mouse Drag Controls for Diorama Rotation
+      const dom = renderer.domElement;
+      dom.addEventListener('mousedown', (e) => { isDragging = true; previousMousePosition = { x: e.clientX, y: e.clientY }; });
+      dom.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const deltaX = e.clientX - previousMousePosition.x;
+        dioramaGroup.rotation.y += deltaX * 0.008;
+        previousMousePosition = { x: e.clientX, y: e.clientY };
+      });
+      window.addEventListener('mouseup', () => { isDragging = false; });
+
+      // Touch Controls for Mobile
+      dom.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1) {
+          isDragging = true;
+          previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        }
+      });
+      dom.addEventListener('touchmove', (e) => {
+        if (!isDragging || e.touches.length !== 1) return;
+        const deltaX = e.touches[0].clientX - previousMousePosition.x;
+        dioramaGroup.rotation.y += deltaX * 0.008;
+        previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      });
+      dom.addEventListener('touchend', () => { isDragging = false; });
+
+      // Handle Resize
+      window.addEventListener('resize', onWindowResize);
+
+      // Start Loop
+      animate3D();
+    }
+
+    function onWindowResize() {
+      const container = document.getElementById('three-container');
+      if (!container || !renderer || !camera) return;
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+    }
+
+    function animate3D() {
+      animReqId = requestAnimationFrame(animate3D);
+      if (dioramaGroup && !isDragging) {
+        dioramaGroup.rotation.y += 0.003; // Gentle auto spin
+      }
+      renderer.render(scene, camera);
+    }
+
+    /* --- Helper 3D Object Mesh Generators --- */
+    function createIslandBase(color = 0x4caf50) {
+      const group = new THREE.Group();
+      // Top Grass Cylinder
+      const topGeo = new THREE.CylinderGeometry(8, 8, 1.2, 32);
+      const topMat = new THREE.MeshStandardMaterial({ color: color, roughness: 0.8, flatShading: true });
+      const topMesh = new THREE.Mesh(topGeo, topMat);
+      topMesh.position.y = 0;
+      topMesh.receiveShadow = true;
+      group.add(topMesh);
+
+      // Dirt Layer
+      const dirtGeo = new THREE.CylinderGeometry(8, 6.5, 3, 32);
+      const dirtMat = new THREE.MeshStandardMaterial({ color: 0x795548, roughness: 0.9, flatShading: true });
+      const dirtMesh = new THREE.Mesh(dirtGeo, dirtMat);
+      dirtMesh.position.y = -2;
+      group.add(dirtMesh);
+
+      return group;
+    }
+
+    function createTree(x, z, scale = 1) {
+      const tree = new THREE.Group();
+      // Trunk
+      const trunkGeo = new THREE.CylinderGeometry(0.15, 0.25, 1.2, 8);
+      const trunkMat = new THREE.MeshStandardMaterial({ color: 0x5d4037 });
+      const trunk = new THREE.Mesh(trunkGeo, trunkMat);
+      trunk.position.y = 0.6;
+      tree.add(trunk);
+      // Leaves Cone
+      const leavesGeo = new THREE.ConeGeometry(0.8, 1.8, 8);
+      const leavesMat = new THREE.MeshStandardMaterial({ color: 0x2e7d32, flatShading: true });
+      const leaves = new THREE.Mesh(leavesGeo, leavesMat);
+      leaves.position.y = 1.8;
+      tree.add(leaves);
+
+      tree.position.set(x, 0.6, z);
+      tree.scale.set(scale, scale, scale);
+      return tree;
+    }
+
+    function createPalmTree(x, z) {
+      const palm = new THREE.Group();
+      const trunkGeo = new THREE.CylinderGeometry(0.12, 0.2, 2.2, 8);
+      const trunkMat = new THREE.MeshStandardMaterial({ color: 0x8d6e63 });
+      const trunk = new THREE.Mesh(trunkGeo, trunkMat);
+      trunk.position.y = 1.1;
+      trunk.rotation.z = -0.1;
+      palm.add(trunk);
+
+      // Leaves
+      for (let i = 0; i < 5; i++) {
+        const leafGeo = new THREE.BoxGeometry(1.2, 0.05, 0.3);
+        const leafMat = new THREE.MeshStandardMaterial({ color: 0x43a047 });
+        const leaf = new THREE.Mesh(leafGeo, leafMat);
+        leaf.position.set(0.5, 2.1, 0);
+        leaf.rotation.y = (i * Math.PI * 2) / 5;
+        leaf.rotation.z = -0.3;
+        palm.add(leaf);
+      }
+      palm.position.set(x, 0.6, z);
+      return palm;
+    }
+
+    function createCloud(x, y, z) {
+      const cloud = new THREE.Group();
+      const mat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.1 });
+      const g1 = new THREE.SphereGeometry(0.8, 8, 8);
+      const m1 = new THREE.Mesh(g1, mat);
+      cloud.add(m1);
+
+      const m2 = new THREE.Mesh(new THREE.SphereGeometry(0.6, 8, 8), mat);
+      m2.position.set(0.7, 0.2, 0);
+      cloud.add(m2);
+
+      const m3 = new THREE.Mesh(new THREE.SphereGeometry(0.6, 8, 8), mat);
+      m3.position.set(-0.7, 0.1, 0);
+      cloud.add(m3);
+
+      cloud.position.set(x, y, z);
+      return cloud;
+    }
+
+    function createMascot3D() {
+      const mascot = new THREE.Group();
+      // Body
+      const bodyMat = new THREE.MeshStandardMaterial({ color: 0xffb74d });
+      const body = new THREE.Mesh(new THREE.SphereGeometry(0.6, 16, 16), bodyMat);
+      body.position.y = 1.1;
+      mascot.add(body);
+      // Head
+      const head = new THREE.Mesh(new THREE.SphereGeometry(0.45, 16, 16), bodyMat);
+      head.position.y = 1.9;
+      mascot.add(head);
+      // Hat (Explorer)
+      const hatBrim = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 0.7, 0.05, 16), new THREE.MeshStandardMaterial({ color: 0x8d6e63 }));
+      hatBrim.position.y = 2.15;
+      mascot.add(hatBrim);
+      const hatTop = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.45, 0.4, 16), new THREE.MeshStandardMaterial({ color: 0x6d4c41 }));
+      hatTop.position.y = 2.35;
+      mascot.add(hatTop);
+
+      mascot.position.set(5.5, 0.6, 4);
+      return mascot;
+    }
+
+    /* --- Builder Switcher for Each Landform Scene --- */
+    function load3DDiorama(type) {
+      if (!dioramaGroup) return;
+      // Clear previous models
+      while (dioramaGroup.children.length > 0) {
+        dioramaGroup.remove(dioramaGroup.children[0]);
+      }
+
+      // Add Mascot & Clouds
+      dioramaGroup.add(createMascot3D());
+      dioramaGroup.add(createCloud(-4, 7, -2));
+      dioramaGroup.add(createCloud(4, 8, -4));
+
+      switch (type) {
+        case 'gunung': {
+          const island = createIslandBase(0x66bb6a);
+          dioramaGroup.add(island);
+          // Big Cone Mountain
+          const mtnGeo = new THREE.ConeGeometry(4.5, 8, 16);
+          const mtnMat = new THREE.MeshStandardMaterial({ color: 0x546e7a, flatShading: true });
+          const mtn = new THREE.Mesh(mtnGeo, mtnMat);
+          mtn.position.y = 4.5;
+          mtn.castShadow = true;
+          dioramaGroup.add(mtn);
+          // Snow/Crater Top
+          const snowGeo = new THREE.ConeGeometry(1.8, 3, 16);
+          const snowMat = new THREE.MeshStandardMaterial({ color: 0xffffff });
+          const snow = new THREE.Mesh(snowGeo, snowMat);
+          snow.position.y = 7;
+          dioramaGroup.add(snow);
+          // Smoke puff
+          const smoke = createCloud(0, 9.2, 0);
+          smoke.scale.set(0.6, 0.6, 0.6);
+          dioramaGroup.add(smoke);
+          break;
+        }
+
+        case 'dataran_tinggi': {
+          const island = createIslandBase(0x43a047);
+          dioramaGroup.add(island);
+          // Terraced Hills
+          const hill1 = new THREE.Mesh(new THREE.CylinderGeometry(5, 6, 2.5, 16), new THREE.MeshStandardMaterial({ color: 0x2e7d32, flatShading: true }));
+          hill1.position.y = 1.8;
+          dioramaGroup.add(hill1);
+
+          const hill2 = new THREE.Mesh(new THREE.CylinderGeometry(3, 4, 2, 16), new THREE.MeshStandardMaterial({ color: 0x388e3c, flatShading: true }));
+          hill2.position.y = 3.5;
+          dioramaGroup.add(hill2);
+
+          // Tea Bushes / Small trees
+          for (let i = 0; i < 8; i++) {
+            const angle = (i * Math.PI * 2) / 8;
+            dioramaGroup.add(createTree(Math.cos(angle) * 3.5, Math.sin(angle) * 3.5, 0.7));
+          }
+          break;
+        }
+
+        case 'dataran_rendah': {
+          const island = createIslandBase(0x81c784);
+          dioramaGroup.add(island);
+          // Rice fields (Green squares)
+          const fieldMat = new THREE.MeshStandardMaterial({ color: 0xaed581 });
+          const f1 = new THREE.Mesh(new THREE.BoxGeometry(4, 0.1, 3), fieldMat);
+          f1.position.set(-2, 0.65, -1);
+          dioramaGroup.add(f1);
+
+          // Houses
+          const houseMat = new THREE.MeshStandardMaterial({ color: 0xff7043 });
+          const house = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1, 1.2), houseMat);
+          house.position.set(2, 1.1, 1);
+          dioramaGroup.add(house);
+          const roof = new THREE.Mesh(new THREE.ConeGeometry(1, 0.8, 4), new THREE.MeshStandardMaterial({ color: 0xd84315 }));
+          roof.position.set(2, 2, 1);
+          roof.rotation.y = Math.PI / 4;
+          dioramaGroup.add(roof);
+
+          dioramaGroup.add(createTree(-3, 2, 0.8));
+          dioramaGroup.add(createTree(3, -2, 0.8));
+          break;
+        }
+
+        case 'pantai': {
+          // Sand Island
+          const island = createIslandBase(0xffe082);
+          dioramaGroup.add(island);
+          // Ocean Water Plane
+          const seaGeo = new THREE.CylinderGeometry(7.9, 7.9, 0.3, 32);
+          const seaMat = new THREE.MeshStandardMaterial({ color: 0x0288d1, transparent: true, opacity: 0.85 });
+          const sea = new THREE.Mesh(seaGeo, seaMat);
+          sea.position.set(2, 0.5, 2);
+          dioramaGroup.add(sea);
+
+          // Palms
+          dioramaGroup.add(createPalmTree(-3, -1));
+          dioramaGroup.add(createPalmTree(-1, -3));
+          break;
+        }
+
+        case 'sungai': {
+          const island = createIslandBase(0x66bb6a);
+          dioramaGroup.add(island);
+          // River Path Blue Ribbon
+          const riverGeo = new THREE.BoxGeometry(2.5, 0.2, 14);
+          const riverMat = new THREE.MeshStandardMaterial({ color: 0x29b6f6 });
+          const river = new THREE.Mesh(riverGeo, riverMat);
+          river.position.set(0, 0.65, 0);
+          river.rotation.y = 0.3;
+          dioramaGroup.add(river);
+
+          dioramaGroup.add(createTree(-4, -2));
+          dioramaGroup.add(createTree(3, 2));
+          dioramaGroup.add(createTree(-3, 3));
+          break;
+        }
+
+        case 'danau': {
+          const island = createIslandBase(0x4caf50);
+          dioramaGroup.add(island);
+          // Center Blue Lake
+          const lakeGeo = new THREE.CylinderGeometry(4.5, 4.5, 0.3, 32);
+          const lakeMat = new THREE.MeshStandardMaterial({ color: 0x0288d1 });
+          const lake = new THREE.Mesh(lakeGeo, lakeMat);
+          lake.position.set(0, 0.6, 0);
+          dioramaGroup.add(lake);
+
+          // Surround with trees
+          for (let i = 0; i < 6; i++) {
+            const angle = (i * Math.PI * 2) / 6;
+            dioramaGroup.add(createTree(Math.cos(angle) * 5.8, Math.sin(angle) * 5.8, 0.8));
+          }
+          break;
+        }
+
+        case 'lembah': {
+          const island = createIslandBase(0x81c784);
+          dioramaGroup.add(island);
+          // Two side mountains
+          const m1 = new THREE.Mesh(new THREE.ConeGeometry(4, 6, 12), new THREE.MeshStandardMaterial({ color: 0x37474f, flatShading: true }));
+          m1.position.set(-4, 3.5, 0);
+          dioramaGroup.add(m1);
+
+          const m2 = new THREE.Mesh(new THREE.ConeGeometry(4, 5.5, 12), new THREE.MeshStandardMaterial({ color: 0x455a64, flatShading: true }));
+          m2.position.set(4, 3.2, 0);
+          dioramaGroup.add(m2);
+
+          // Valley Stream
+          const stream = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.15, 12), new THREE.MeshStandardMaterial({ color: 0x4fc3f7 }));
+          stream.position.set(0, 0.65, 0);
+          dioramaGroup.add(stream);
+          break;
+        }
+
+        case 'bukit': {
+          const island = createIslandBase(0x9ccc65);
+          dioramaGroup.add(island);
+          // Smooth rounded hill dome
+          const domeGeo = new THREE.SphereGeometry(4.5, 16, 16, 0, Math.PI * 2, 0, Math.PI / 2);
+          const domeMat = new THREE.MeshStandardMaterial({ color: 0x7cb342, flatShading: true });
+          const dome = new THREE.Mesh(domeGeo, domeMat);
+          dome.position.y = 0.5;
+          dioramaGroup.add(dome);
+
+          dioramaGroup.add(createTree(-1, 2, 0.9));
+          dioramaGroup.add(createTree(1, -1, 0.9));
+          break;
+        }
+
+        case 'rawa': {
+          // Mud Island
+          const island = createIslandBase(0x5d4037);
+          dioramaGroup.add(island);
+          // Water puddle plane
+          const swampGeo = new THREE.CylinderGeometry(7.5, 7.5, 0.2, 32);
+          const swampMat = new THREE.MeshStandardMaterial({ color: 0x33691e, transparent: true, opacity: 0.9 });
+          const swamp = new THREE.Mesh(swampGeo, swampMat);
+          swamp.position.y = 0.6;
+          dioramaGroup.add(swamp);
+
+          // Reeds / Mangrove stalks
+          for (let i = 0; i < 10; i++) {
+            const rx = (Math.random() - 0.5) * 8;
+            const rz = (Math.random() - 0.5) * 8;
+            const reed = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 1.8, 6), new THREE.MeshStandardMaterial({ color: 0x1b5e20 }));
+            reed.position.set(rx, 1.2, rz);
+            dioramaGroup.add(reed);
+          }
+          break;
+        }
+
+        case 'pegunungan': {
+          const island = createIslandBase(0x4caf50);
+          dioramaGroup.add(island);
+          // Multiple overlapping mountain peaks
+          const pos = [
+            { x: -3, z: -1, h: 5.5, r: 3.2 },
+            { x: 0, z: 1, h: 6.5, r: 3.8 },
+            { x: 3, z: -2, h: 5, r: 3 }
+          ];
+          pos.forEach(p => {
+            const m = new THREE.Mesh(new THREE.ConeGeometry(p.r, p.h, 10), new THREE.MeshStandardMaterial({ color: 0x455a64, flatShading: true }));
+            m.position.set(p.x, p.h / 2 + 0.5, p.z);
+            dioramaGroup.add(m);
+
+            const snow = new THREE.Mesh(new THREE.ConeGeometry(p.r * 0.4, p.h * 0.3, 10), new THREE.MeshStandardMaterial({ color: 0xffffff }));
+            snow.position.set(p.x, p.h * 0.85 + 0.5, p.z);
+            dioramaGroup.add(snow);
+          });
+          break;
+        }
+
+        default:
+          dioramaGroup.add(createIslandBase());
+      }
+    }
+
+    /* =========================================================================
+       4. GAME STATE MANAGEMENT & USER INTERFACE HANDLERS
+       ========================================================================= */
+    let currentLevel = 1;
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let lives = 3;
+    let activeQuestions = [];
+    let userAnswers = []; // Store answers for final review
+
+    function showScreen(screenId) {
+      sounds.playClick();
+      ['start-screen', 'level-select-screen', 'game-screen', 'result-screen'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+      });
+      const target = document.getElementById(screenId);
+      if (target) target.classList.remove('hidden');
+
+      if (screenId === 'game-screen') {
+        setTimeout(onWindowResize, 100);
+      }
+    }
+
+    function startGame(levelNum) {
+      currentLevel = levelNum;
+      currentQuestionIndex = 0;
+      score = 0;
+      lives = 3;
+      userAnswers = [];
+
+      activeQuestions = (levelNum === 1) ? [...questionBank.level1] : [...questionBank.level2];
+      
+      // Update Level Badge UI
+      const badge = document.getElementById('level-badge');
+      const category = document.getElementById('question-category');
+      if (levelNum === 1) {
+        badge.innerText = "Level 1: Identifikasi 3D";
+        badge.className = "px-3 py-1 bg-amber-500 text-white font-bold text-xs md:text-sm rounded-full shadow";
+        category.innerText = "Identifikasi Bentang Alam";
+      } else {
+        badge.innerText = "Level 2: Aktivitas Masyarakat";
+        badge.className = "px-3 py-1 bg-teal-600 text-white font-bold text-xs md:text-sm rounded-full shadow";
+        category.innerText = "Aktivitas Penduduk & Ekonomi";
+      }
+
+      updateLivesUI();
+      document.getElementById('current-score').innerText = score;
+
+      showScreen('game-screen');
+      if (!renderer) initThreeJS();
+      
+      loadQuestion();
+    }
+
+    function updateLivesUI() {
+      const container = document.getElementById('lives-container');
+      container.innerHTML = '';
+      for (let i = 0; i < 3; i++) {
+        if (i < lives) {
+          container.innerHTML += `<i class="fa-solid fa-heart animate-pulse"></i>`;
+        } else {
+          container.innerHTML += `<i class="fa-solid fa-heart text-slate-300"></i>`;
+        }
+      }
+    }
+
+    function loadQuestion() {
+      const q = activeQuestions[currentQuestionIndex];
+      if (!q) return;
+
+      // Update Question Counters & Progress Bar
+      document.getElementById('question-count').innerText = `Soal ${currentQuestionIndex + 1} / ${activeQuestions.length}`;
+      const progressPercent = ((currentQuestionIndex + 1) / activeQuestions.length) * 100;
+      document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+
+      // Question Text
+      document.getElementById('question-text').innerText = q.question;
+
+      // Options
+      const optionsContainer = document.getElementById('options-container');
+      optionsContainer.innerHTML = '';
+      q.options.forEach((optText, idx) => {
+        const btn = document.createElement('button');
+        btn.className = "w-full text-left p-3.5 bg-white hover:bg-sky-50 border-2 border-slate-200 hover:border-sky-400 rounded-2xl font-bold text-slate-700 transition shadow-sm btn-bounce text-sm md:text-base";
+        btn.innerText = optText;
+        btn.onclick = () => checkAnswer(idx);
+        optionsContainer.appendChild(btn);
+      });
+
+      // Reset Feedback Box
+      const feedbackBox = document.getElementById('feedback-box');
+      feedbackBox.classList.add('hidden');
+
+      // Update 3D Model Scene
+      load3DDiorama(q.landformKey);
+    }
+
+    function checkAnswer(selectedIndex) {
+      const q = activeQuestions[currentQuestionIndex];
+      const optionsContainer = document.getElementById('options-container');
+      const buttons = optionsContainer.getElementsByTagName('button');
+      
+      // Disable options after selection
+      for (let btn of buttons) {
+        btn.disabled = true;
+        btn.classList.remove('hover:bg-sky-50', 'btn-bounce');
+      }
+
+      const isCorrect = (selectedIndex === q.answer);
+      
+      // Record user answer for final review modal
+      userAnswers.push({
+        question: q.question,
+        userChoice: q.options[selectedIndex],
+        correctChoice: q.options[q.answer],
+        isCorrect: isCorrect,
+        explanation: q.explanation
+      });
+
+      const feedbackBox = document.getElementById('feedback-box');
+      const feedbackIcon = document.getElementById('feedback-icon');
+      const feedbackMsg = document.getElementById('feedback-msg');
+
+      if (isCorrect) {
+        sounds.playCorrect();
+        score += 10;
+        document.getElementById('current-score').innerText = score;
+        
+        buttons[selectedIndex].classList.add('bg-emerald-100', 'border-emerald-500', 'text-emerald-900');
+        feedbackBox.className = "rounded-2xl p-3 text-sm font-bold flex items-center justify-between transition-all bg-emerald-100 text-emerald-900 border border-emerald-300";
+        feedbackIcon.innerText = "🎉";
+        feedbackMsg.innerText = "Jawaban Tepat! +10 Poin";
+      } else {
+        sounds.playWrong();
+        lives--;
+        updateLivesUI();
+
+        buttons[selectedIndex].classList.add('bg-rose-100', 'border-rose-500', 'text-rose-900');
+        buttons[q.answer].classList.add('bg-emerald-100', 'border-emerald-500', 'text-emerald-900');
+        
+        feedbackBox.className = "rounded-2xl p-3 text-sm font-bold flex items-center justify-between transition-all bg-rose-100 text-rose-900 border border-rose-300";
+        feedbackIcon.innerText = "💡";
+        feedbackMsg.innerText = `Kurang tepat. Jawaban benar: ${q.options[q.answer].split('.')[0]}`;
+      }
+
+      feedbackBox.classList.remove('hidden');
+
+      // Check for Game Over
+      if (lives <= 0) {
+        document.getElementById('next-btn').innerHTML = `Lihat Hasil <i class="fa-solid fa-flag-checkered ml-1"></i>`;
+      }
+    }
+
+    function nextQuestion() {
+      sounds.playClick();
+      if (lives <= 0 || currentQuestionIndex >= activeQuestions.length - 1) {
+        endGame();
+      } else {
+        currentQuestionIndex++;
+        loadQuestion();
+      }
+    }
+
+    function showHint() {
+      sounds.playClick();
+      const q = activeQuestions[currentQuestionIndex];
+      alertModal("💡 Petunjuk Petualang", q.hint);
+    }
+
+    function endGame() {
+      sounds.playWin();
+      showScreen('result-screen');
+
+      // Compute Stats
+      const totalQuestions = activeQuestions.length;
+      const correctCount = userAnswers.filter(a => a.isCorrect).length;
+      
+      document.getElementById('final-score').innerText = score;
+      document.getElementById('final-correct').innerText = `${correctCount} / ${totalQuestions}`;
+
+      // Star Rating
+      const starContainer = document.getElementById('star-rating');
+      let starsHtml = '';
+      let badgeTitle = 'Pemula Bentang Alam';
+
+      if (score >= 80) {
+        starsHtml = `<i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>`;
+        badgeTitle = 'Pakar Bentang Alam Nusantara 🏆';
+      } else if (score >= 50) {
+        starsHtml = `<i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star text-slate-300"></i>`;
+        badgeTitle = 'Penjelajah Alam Handal ⭐';
+      } else {
+        starsHtml = `<i class="fa-solid fa-star"></i><i class="fa-regular fa-star text-slate-300"></i><i class="fa-regular fa-star text-slate-300"></i>`;
+        badgeTitle = 'Petualang Muda 🌿';
+      }
+      starContainer.innerHTML = starsHtml;
+      document.getElementById('final-badge').innerText = badgeTitle;
+    }
+
+    /* --- Custom Modal Alert --- */
+    function alertModal(title, text) {
+      const modal = document.createElement('div');
+      modal.className = "fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in";
+      modal.innerHTML = `
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl border-4 border-amber-300">
+          <h4 class="text-xl font-bold text-teal-800 mb-2">${title}</h4>
+          <p class="text-slate-600 text-sm mb-6 font-medium">${text}</p>
+          <button onclick="this.closest('.fixed').remove(); sounds.playClick();" class="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl shadow">
+            Siap, Paham!
+          </button>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+
+    function toggleHelpModal() {
+      sounds.playClick();
+      const el = document.getElementById('help-modal');
+      el.classList.toggle('hidden');
+    }
+
+    function showReviewModal() {
+      sounds.playClick();
+      const modal = document.getElementById('review-modal');
+      const list = document.getElementById('review-list');
+      list.innerHTML = '';
+
+      userAnswers.forEach((ans, idx) => {
+        const item = document.createElement('div');
+        item.className = `p-4 rounded-2xl border-2 ${ans.isCorrect ? 'bg-emerald-50 border-emerald-200' : 'bg-rose-50 border-rose-200'}`;
+        item.innerHTML = `
+          <div class="flex items-center justify-between mb-1">
+            <span class="font-bold text-xs ${ans.isCorrect ? 'text-emerald-700' : 'text-rose-700'}">
+              ${ans.isCorrect ? '✓ Jawaban Benar' : '✗ Jawaban Salah'}
+            </span>
+            <span class="text-xs text-slate-400 font-bold">Soal #${idx + 1}</span>
+          </div>
+          <p class="font-bold text-slate-800 text-sm mb-2">${ans.question}</p>
+          <div class="text-xs space-y-1 mb-2">
+            <div>Pilihanmu: <span class="font-bold ${ans.isCorrect ? 'text-emerald-800' : 'text-rose-800'}">${ans.userChoice}</span></div>
+            ${!ans.isCorrect ? `<div>Jawaban Benar: <span class="font-bold text-emerald-800">${ans.correctChoice}</span></div>` : ''}
+          </div>
+          <div class="text-xs bg-white/80 p-2 rounded-xl text-slate-600 font-medium border border-slate-200">
+            <strong>Penjelasan:</strong> ${ans.explanation}
+          </div>
+        </div>
+        `;
+        list.appendChild(item);
+      });
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeReviewModal() {
+      sounds.playClick();
+      document.getElementById('review-modal').classList.add('hidden');
+    }
+  </script>
+</body>
+</html>
